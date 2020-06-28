@@ -4,11 +4,12 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "googleapis": "^39.2.0",
     "request": "^2.88.2"
   },
   "devDependencies": {

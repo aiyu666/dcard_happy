@@ -1,1 +1,4 @@
 node_modules
+asset
+token.json
+credentials.json
