@@ -1,18 +1,23 @@
+const download = require('image-downloader');
 const request = require('./module/request.js');
-const downloadImg = require('./module/downloadImg.js');
+const uploadToGoogleDrive = require('./module/googleDrive');
 
 (async () => {
-    const happyMedia = [];
     const res = await request.getRequest('https://www.dcard.tw/service/api/v2/forums/beauty/posts');
     if (!(res.statusCode === 200)) return;
     const responseBody = await JSON.parse(res.body);
     const targetPosts = await responseBody.filter((post) => 'mediaMeta' in post && post.mediaMeta.length !== 0);
     await targetPosts.forEach((targetPost) => {
         const mediaData = targetPost.mediaMeta.filter((mediaMeta) => mediaMeta.type !== 'image/thumbnail');
-        downloadImg(mediaData[0].url, `${mediaData[0].id}.jpeg`, () => {
-            console.log(`Download ${mediaData[0].id} finished`);
-        });
-        happyMedia.push({ id: mediaData[0].id, url: mediaData[0].url });
+        const options = {
+            url: mediaData[0].url,
+            dest: `./asset/${mediaData[0].id}.jpeg`,
+        };
+        download.image(options)
+            .then(({ filename }) => {
+                console.log('Saved to', filename.split('./asset/')[1]);
+                uploadToGoogleDrive(filename.split('./asset/')[1], filename);
+            })
+            .catch((err) => console.error(err));
     });
-    console.log(happyMedia);
 })();

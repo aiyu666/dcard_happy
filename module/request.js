@@ -12,6 +12,19 @@ async function getRequest(options) {
     });
 }
 
+/**
+ * @param  {object} options the request url, body ,headers
+ */
+async function headRequest(options) {
+    return new Promise((resolve, reject) => {
+        request.head(options, (error, response) => {
+            if (error) reject(new Error(`Ops! Some error about get request-> ${error}`));
+            resolve(response);
+        });
+    });
+}
+
 module.exports = {
     getRequest,
+    headRequest,
 };
